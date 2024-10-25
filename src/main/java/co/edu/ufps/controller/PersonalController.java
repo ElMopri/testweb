@@ -12,13 +12,24 @@ import org.springframework.http.ResponseEntity;
 
 import co.edu.ufps.entities.Personal;
 import co.edu.ufps.repositories.PersonalRepository;
+import co.edu.ufps.services.PersonalService;
 
 @RestController
 @RequestMapping("/personals")
 public class PersonalController {
 	
 	@Autowired
-	PersonalRepository personalRepository;
+	public PersonalService personalService;
+	
+	@GetMapping()
+	public List<Personal> list(){
+		return personalService.list();
+	}
+	
+/*	
+	
+	@Autowired
+	public PersonalRepository personalRepository;
 	
 	@GetMapping
 	public List<Personal> list(){
@@ -70,5 +81,7 @@ public class PersonalController {
         personalRepository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+    
+*/
 
 }
