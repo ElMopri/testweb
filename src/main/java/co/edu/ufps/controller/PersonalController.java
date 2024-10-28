@@ -1,30 +1,46 @@
 package co.edu.ufps.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.*;
+
 import org.springframework.http.ResponseEntity;
 
 import co.edu.ufps.entities.Personal;
-import co.edu.ufps.repositories.PersonalRepository;
 import co.edu.ufps.services.PersonalService;
 
 @RestController
 @RequestMapping("/personals")
 public class PersonalController {
-	
-	@Autowired
-	public PersonalService personalService;
-	
-	@GetMapping()
-	public List<Personal> list(){
-		return personalService.list();
-	}
+    
+    @Autowired
+    private PersonalService personalService;
+
+    @GetMapping
+    public List<Personal> list() {
+        return personalService.list();
+    }
+
+    @PostMapping
+    public Personal create(@RequestBody Personal personal) {
+        return personalService.create(personal);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Personal> getById(@PathVariable Integer id) {
+        return personalService.getById(id);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Personal> update(@PathVariable Integer id, @RequestBody Personal personalDetails) {
+        return personalService.update(id, personalDetails);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Integer id) {
+        return personalService.delete(id);
+    }
 	
 /*	
 	
