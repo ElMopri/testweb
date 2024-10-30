@@ -3,7 +3,6 @@ package co.edu.ufps.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -48,13 +47,18 @@ public class TipoPersonalController {
 	
 	@PostMapping("/{id}/agregar_funciones/{funcionId}")
 	public TipoPersonal create(@PathVariable Integer id, @PathVariable Integer funcionId) {
-		
 		TipoPersonal nuevaTipoPersonal = tipoPersonalService.addFuncion(id, funcionId);
 		return nuevaTipoPersonal;
 	}
 	
+	@DeleteMapping("/{id}/remover_funciones/{funcionId}")
+	public TipoPersonal delete(@PathVariable Integer id, @PathVariable Integer funcionId) {
+		TipoPersonal nuevaTipoPersonal = tipoPersonalService.removeFuncion(id, funcionId);
+		return nuevaTipoPersonal;
+	}
+	
 	@PutMapping("/{id}")
-	public ResponseEntity<TipoPersonal> update(@PathVariable Integer id, @RequestBody TipoPersonal tipoPersonalDetails) {
+	public TipoPersonal update(@PathVariable Integer id, @RequestBody TipoPersonal tipoPersonalDetails) {
 		return tipoPersonalService.update(id,tipoPersonalDetails);
 	}
 	

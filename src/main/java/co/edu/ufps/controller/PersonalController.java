@@ -5,8 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import org.springframework.http.ResponseEntity;
-
 import co.edu.ufps.entities.Personal;
 import co.edu.ufps.services.PersonalService;
 
@@ -28,19 +26,25 @@ public class PersonalController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Personal> getById(@PathVariable Integer id) {
+    public Personal getById(@PathVariable Integer id) {
         return personalService.getById(id);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Personal> update(@PathVariable Integer id, @RequestBody Personal personalDetails) {
+    public Personal update(@PathVariable Integer id, @RequestBody Personal personalDetails) {
         return personalService.update(id, personalDetails);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Integer id) {
+    public Personal delete(@PathVariable Integer id) {
         return personalService.delete(id);
     }
+    
+	@PostMapping("/{id}/agregar_tipo_personal/{tipoPersonalId}")
+	public Personal create(@PathVariable Integer id, @PathVariable Integer tipoPersonalId) {
+		Personal nuevaPersonal = personalService.addTipoPersonal(id, tipoPersonalId);
+		return nuevaPersonal;
+	}
 	
 /*	
 	

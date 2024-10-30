@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import co.edu.ufps.entities.Funcion;
@@ -48,18 +47,17 @@ public class FuncionService {
 		return funcionRepository.save(funcion);
 	}
 
-    public ResponseEntity<Funcion> update(Integer id, Funcion funcionDetails) {
+    public Funcion update(Integer id, Funcion funcionDetails) {
         Optional<Funcion> funcionOpt = funcionRepository.findById(id);
 
         if (!funcionOpt.isPresent()) {
-            return ResponseEntity.notFound().build();
+            return null;
         }
 
         Funcion funcion = funcionOpt.get();
         funcion.setDescripcion(funcionDetails.getDescripcion());
 
-        Funcion updatedFuncion = funcionRepository.save(funcion);
-        return ResponseEntity.ok(updatedFuncion);
+        return funcionRepository.save(funcion);
     }
 	
 }
