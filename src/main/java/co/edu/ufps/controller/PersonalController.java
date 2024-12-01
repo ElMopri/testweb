@@ -3,6 +3,7 @@ package co.edu.ufps.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import co.edu.ufps.entities.Personal;
@@ -11,97 +12,40 @@ import co.edu.ufps.services.PersonalService;
 @RestController
 @RequestMapping("/personals")
 public class PersonalController {
-    
+
     @Autowired
     private PersonalService personalService;
 
     @GetMapping
-    public List<Personal> list() {
-        return personalService.list();
+    public ResponseEntity<List<Personal>> list() {
+        return ResponseEntity.ok(personalService.list());
     }
 
     @PostMapping
-    public Personal create(@RequestBody Personal personal) {
-        return personalService.create(personal);
+    public ResponseEntity<Personal> create(@RequestBody Personal personal) {
+        Personal nuevaPersonal = personalService.create(personal);
+        return ResponseEntity.ok(nuevaPersonal);
     }
 
-    @GetMapping("/{id}")
-    public Personal getById(@PathVariable Integer id) {
-        return personalService.getById(id);
-    }
-
-    @PutMapping("/{id}")
-    public Personal update(@PathVariable Integer id, @RequestBody Personal personalDetails) {
-        return personalService.update(id, personalDetails);
-    }
-
-    @DeleteMapping("/{id}")
-    public Personal delete(@PathVariable Integer id) {
-        return personalService.delete(id);
-    }
-    
-	@PostMapping("/{id}/agregar_tipo_personal/{tipoPersonalId}")
-	public Personal create(@PathVariable Integer id, @PathVariable Integer tipoPersonalId) {
-		Personal nuevaPersonal = personalService.addTipoPersonal(id, tipoPersonalId);
-		return nuevaPersonal;
-	}
-	
-/*	
-	
-	@Autowired
-	public PersonalRepository personalRepository;
-	
-	@GetMapping
-	public List<Personal> list(){
-		List<Personal> personals = personalRepository.findAll();
-		return personals;	
-	}
-
-	 // Crear un nuevo personal
-    @PostMapping
-    public Personal create(@RequestBody Personal personal) {
-        return personalRepository.save(personal);
-    }
-
-    // Obtener un personal por ID
     @GetMapping("/{id}")
     public ResponseEntity<Personal> getById(@PathVariable Integer id) {
-        Optional<Personal> personal = personalRepository.findById(id);
-        return personal.map(ResponseEntity::ok)
-                       .orElseGet(() -> ResponseEntity.notFound().build());
+        return ResponseEntity.ok(personalService.getById(id));
     }
 
-    // Actualizar un personal existente
     @PutMapping("/{id}")
     public ResponseEntity<Personal> update(@PathVariable Integer id, @RequestBody Personal personalDetails) {
-        Optional<Personal> optionalPersonal = personalRepository.findById(id);
-        
-        if (!optionalPersonal.isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
-        
-        Personal personal = optionalPersonal.get();
-        personal.setDocumento(personalDetails.getDocumento()); // Asumiendo que hay un campo nombre
-        personal.setNombre(personalDetails.getNombre());
-        personal.setEmail(personalDetails.getEmail());
-        personal.setTelefono(personalDetails.getTelefono());
-        // Actualiza otros campos según sea necesario
-        
-        Personal updatedPersonal = personalRepository.save(personal);
-        return ResponseEntity.ok(updatedPersonal);
+        return ResponseEntity.ok(personalService.update(id, personalDetails));
     }
 
-    // Eliminar un personal por ID
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Integer id) {
-        if (!personalRepository.existsById(id)) {
-            return ResponseEntity.notFound().build();
-        }
-        
-        personalRepository.deleteById(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Personal> delete(@PathVariable Integer id) {
+        return ResponseEntity.ok(personalService.delete(id));
     }
-    
-*/
 
+    @PostMapping("/{id}/agregar_tipo_personal/{tipoPersonalId}")
+    public ResponseEntity<Personal> create(@PathVariable Integer id, @PathVariable Integer tipoPersonalId) {
+        Personal nuevaPersonal = personalService.addTipoPersonal(id, tipoPersonalId);
+        return ResponseEntity.ok(nuevaPersonal);
+    }
 }
+

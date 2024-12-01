@@ -3,6 +3,7 @@ package co.edu.ufps.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,51 +21,53 @@ import co.edu.ufps.services.TipoPersonalService;
 @RequestMapping("/tipo_personal")
 public class TipoPersonalController {
 
-    @Autowired
-    private TipoPersonalService tipoPersonalService;
+	@Autowired
+	private TipoPersonalService tipoPersonalService;
 
-    @GetMapping
-    public List<TipoPersonal> list() {
-        return tipoPersonalService.list();
-    }
-	
-    @GetMapping("/{id}")
-    public TipoPersonal get(@PathVariable Integer id) {
-    	return tipoPersonalService.get(id);
-    }
-    
+	@GetMapping
+	public ResponseEntity<List<TipoPersonal>> list() {
+		return ResponseEntity.ok(tipoPersonalService.list());
+	}
+
+	@GetMapping("/{id}")
+	public ResponseEntity<TipoPersonal> get(@PathVariable Integer id) {
+		return ResponseEntity.ok(tipoPersonalService.get(id));
+	}
+
 	@GetMapping("/{id}/funciones")
-	public List<Funcion> getFuncions(@PathVariable Integer id) {
-		return tipoPersonalService.get(id).getFunciones();
+	public ResponseEntity<List<Funcion>> getFuncions(@PathVariable Integer id) {
+		return ResponseEntity.ok(tipoPersonalService.get(id).getFunciones());
 	}
-	
+
 	@PostMapping()
-	public TipoPersonal create(@RequestBody TipoPersonal tipoPersona) {
-		
+	public ResponseEntity<TipoPersonal> create(@RequestBody TipoPersonal tipoPersona) {
 		TipoPersonal nuevaTipoPersonal = tipoPersonalService.create(tipoPersona);
-		return nuevaTipoPersonal;
+		return ResponseEntity.ok(nuevaTipoPersonal);
 	}
-	
+
 	@PostMapping("/{id}/agregar_funciones/{funcionId}")
-	public TipoPersonal create(@PathVariable Integer id, @PathVariable Integer funcionId) {
+	public ResponseEntity<TipoPersonal> create(@PathVariable Integer id, @PathVariable Integer funcionId) {
 		TipoPersonal nuevaTipoPersonal = tipoPersonalService.addFuncion(id, funcionId);
-		return nuevaTipoPersonal;
+		return ResponseEntity.ok(nuevaTipoPersonal);
 	}
-	
+
 	@DeleteMapping("/{id}/remover_funciones/{funcionId}")
-	public TipoPersonal delete(@PathVariable Integer id, @PathVariable Integer funcionId) {
+	public ResponseEntity<TipoPersonal> deleteFuncion(@PathVariable Integer id, @PathVariable Integer funcionId) {
 		TipoPersonal nuevaTipoPersonal = tipoPersonalService.removeFuncion(id, funcionId);
-		return nuevaTipoPersonal;
+		return ResponseEntity.ok(nuevaTipoPersonal);
 	}
-	
+
 	@PutMapping("/{id}")
-	public TipoPersonal update(@PathVariable Integer id, @RequestBody TipoPersonal tipoPersonalDetails) {
-		return tipoPersonalService.update(id,tipoPersonalDetails);
+	public ResponseEntity<TipoPersonal> update(@PathVariable Integer id,
+			@RequestBody TipoPersonal tipoPersonalDetails) {
+		TipoPersonal updatedTipoPersonal = tipoPersonalService.update(id, tipoPersonalDetails);
+		return ResponseEntity.ok(updatedTipoPersonal);
 	}
-	
+
 	@DeleteMapping("/{id}")
-	public TipoPersonal delete(@PathVariable Integer id) {
-		return tipoPersonalService.delete(id);
+	public ResponseEntity<TipoPersonal> delete(@PathVariable Integer id) {
+		TipoPersonal deletedTipoPersonal = tipoPersonalService.delete(id);
+		return ResponseEntity.ok(deletedTipoPersonal);
 	}
-    
+
 }

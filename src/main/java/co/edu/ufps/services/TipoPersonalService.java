@@ -14,33 +14,33 @@ import co.edu.ufps.repositories.TipoPersonalRepository;
 @Service
 public class TipoPersonalService {
 
-    @Autowired
-    private TipoPersonalRepository tipoPersonalRepository;
+	@Autowired
+	private TipoPersonalRepository tipoPersonalRepository;
 	@Autowired
 	public FuncionRepository funcionRepository;
 
-    public List<TipoPersonal> list() {
-        return tipoPersonalRepository.findAll();
-    }
-    
-    public TipoPersonal get(Integer id) {
-    	Optional<TipoPersonal> tipoPersonalOpt = tipoPersonalRepository.findById(id);
-    	if(tipoPersonalOpt.isPresent()) {
-    		return tipoPersonalOpt.get();
-    	}
-    	return null;
-    }
-    
-	public TipoPersonal delete(Integer id) {
-		Optional<TipoPersonal> tipoPersonalOpt =  tipoPersonalRepository.findById(id);
-		
+	public List<TipoPersonal> list() {
+		return tipoPersonalRepository.findAll();
+	}
+
+	public TipoPersonal get(Integer id) {
+		Optional<TipoPersonal> tipoPersonalOpt = tipoPersonalRepository.findById(id);
 		if (tipoPersonalOpt.isPresent()) {
-			
+			return tipoPersonalOpt.get();
+		}
+		return null;
+	}
+
+	public TipoPersonal delete(Integer id) {
+		Optional<TipoPersonal> tipoPersonalOpt = tipoPersonalRepository.findById(id);
+
+		if (tipoPersonalOpt.isPresent()) {
+
 			TipoPersonal tipoPersonal = tipoPersonalOpt.get();
 			tipoPersonalRepository.delete(tipoPersonal);
 			return tipoPersonal;
 		}
-		
+
 		return null;
 	}
 
@@ -49,42 +49,61 @@ public class TipoPersonalService {
 	}
 
 	public TipoPersonal update(Integer id, TipoPersonal tipoPersonalDetails) {
-	    Optional<TipoPersonal> tipoPersonalOpt = tipoPersonalRepository.findById(id);
+		Optional<TipoPersonal> tipoPersonalOpt = tipoPersonalRepository.findById(id);
 
-	    if (!tipoPersonalOpt.isPresent()) {
-	        return null;
-	    }
+		if (!tipoPersonalOpt.isPresent()) {
+			return null;
+		}
 
-	    TipoPersonal tipoPersonal = tipoPersonalOpt.get();
-	    tipoPersonal.setDescripcion(tipoPersonalDetails.getDescripcion());
+		TipoPersonal tipoPersonal = tipoPersonalOpt.get();
+		tipoPersonal.setDescripcion(tipoPersonalDetails.getDescripcion());
 
-	    return tipoPersonalRepository.save(tipoPersonal);
+		return tipoPersonalRepository.save(tipoPersonal);
 	}
 
 	public TipoPersonal addFuncion(Integer id, Integer funcionId) {
-		Optional<TipoPersonal> tipoPersonalOpt =  tipoPersonalRepository.findById(id);
+		Optional<TipoPersonal> tipoPersonalOpt = tipoPersonalRepository.findById(id);
 		if (tipoPersonalOpt.isPresent()) {
 			TipoPersonal tipoPersonal = tipoPersonalOpt.get();
 			Optional<Funcion> funcionOpt = funcionRepository.findById(funcionId);
 			if (funcionOpt.isPresent()) {
-				tipoPersonal.addFuncion(funcionOpt.get());	
+				tipoPersonal.addFuncion(funcionOpt.get());
 			}
 			return tipoPersonalRepository.save(tipoPersonal);
 		}
 		return null;
 	}
-	
+
 	public TipoPersonal removeFuncion(Integer id, Integer funcionId) {
-		Optional<TipoPersonal> tipoPersonalOpt =  tipoPersonalRepository.findById(id);
+		Optional<TipoPersonal> tipoPersonalOpt = tipoPersonalRepository.findById(id);
 		if (tipoPersonalOpt.isPresent()) {
 			TipoPersonal tipoPersonal = tipoPersonalOpt.get();
 			Optional<Funcion> funcionOpt = funcionRepository.findById(funcionId);
 			if (funcionOpt.isPresent()) {
-				tipoPersonal.removeFuncion(funcionOpt.get());	
+				tipoPersonal.removeFuncion(funcionOpt.get());
 			}
 			return tipoPersonalRepository.save(tipoPersonal);
 		}
 		return null;
 	}
-	
+
+	public TipoPersonal addFuncionSinRepetidos(Integer id, Integer funcionId) {
+		Optional<TipoPersonal> tipoPersonalOpt = tipoPersonalRepository.findById(id);
+		if (tipoPersonalOpt.isPresent()) {
+			TipoPersonal tipoPersonal = tipoPersonalOpt.get();
+			Optional<Funcion> funcionOpt = funcionRepository.findById(funcionId);
+
+			if (funcionOpt.isPresent()) {
+				Funcion funcion = funcionOpt.get();
+
+				// Verifica si la función ya existe en el conjunto de funciones de tipoPersonal
+				if (!tipoPersonal.getFunciones().contains(funcion)) {
+					tipoPersonal.addFuncion(funcion); // Agrega solo si no existe
+				}
+			}
+			return tipoPersonalRepository.save(tipoPersonal);
+		}
+		return null;
+	}
+
 }
