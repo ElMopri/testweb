@@ -6,6 +6,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import co.edu.ufps.dto.PersonalDTO;
+import co.edu.ufps.dto.TipoPersonalDTO;
 import co.edu.ufps.entities.Personal;
 import co.edu.ufps.entities.TipoPersonal;
 import co.edu.ufps.repositories.PersonalRepository;
@@ -28,17 +30,27 @@ public class PersonalService {
         return personalRepository.save(personal);
     }
 
-    public Personal getById(Integer id) {
-        return personalRepository.findById(id).orElse(null);
+    public PersonalDTO getById(Integer id) {
+        Optional<Personal> optionalPersonal = personalRepository.findById(id);
+        if (!optionalPersonal.isPresent()) {
+            return null;
+        }
+        Personal personal = optionalPersonal.get();
+        TipoPersonalDTO tipoPersonalDTO = new TipoPersonalDTO();
+        if (personal.getTipoPersonal() != null) {
+        	tipoPersonalDTO.setDescripcion(personal.getTipoPersonal().getDescripcion());
+        }else {
+        	tipoPersonalDTO = null;
+        }
+        PersonalDTO personalDTO = new PersonalDTO(personal.getId(),personal.getNombre(),personal.getEmail(),tipoPersonalDTO);
+        return personalDTO;
     }
 
     public Personal update(Integer id, Personal personalDetails) {
         Optional<Personal> optionalPersonal = personalRepository.findById(id);
-
         if (!optionalPersonal.isPresent()) {
             return null;
         }
-
         Personal personal = optionalPersonal.get();
         personal.setDocumento(personalDetails.getDocumento());
         personal.setNombre(personalDetails.getNombre());

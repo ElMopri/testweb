@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import co.edu.ufps.dto.PersonalDTO;
 import co.edu.ufps.entities.Personal;
 import co.edu.ufps.services.PersonalService;
 
@@ -28,7 +29,7 @@ public class PersonalController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Personal> getById(@PathVariable Integer id) {
+    public ResponseEntity<PersonalDTO> getById(@PathVariable Integer id) {
         return ResponseEntity.ok(personalService.getById(id));
     }
 
